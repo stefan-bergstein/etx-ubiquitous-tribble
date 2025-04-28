@@ -1,0 +1,43 @@
+version: 3
+domain: red_hat_subscriptions
+created_by: stefan-bergstein
+seed_examples:
+  - context: |
+      When to choose core-pair subscriptions. You will most often choose core-pair subscriptions when you
+      are deploying self-managed OpenShift to public cloud hyperscalers, within an Infrastructure-as-a-Service
+      (IaaS) private cloud, or when you are deploying on a hypervisor such as VMware vSphere, Red Hat OpenStack® Platform, or Nutanix.
+      Core-pair subscriptions remove the need to attach subscriptions to physical servers and allow the freedom for pods to be deployed
+      across your hybrid cloud whenever and wherever needed. You can also use core-pair subscriptions on bare-metal
+      servers or devices (i.e., with no hypervisor). Be aware there is usually a compute pod density where bare metal
+      socket-pair subscriptions may be more cost effective.
+    questions_and_answers:
+      - question: |
+          When should I choose OpenShift core-pair subscriptions?
+        answer: |
+          You should choose core-pair subscriptions when deploying self-managed OpenShift on
+          public cloud hyperscalers, within an Infrastructure-as-a-Service (IaaS) private cloud, or on a
+          hypervisor such as VMware vSphere, Red Hat OpenStack Platform, or Nutanix.
+      - question: |
+          What advantage do core-pair subscriptions offer for hybrid cloud deployments?
+        answer: |
+          Core-pair subscriptions remove the need to attach subscriptions to physical servers,
+          giving you the freedom to deploy pods across your hybrid cloud whenever and wherever needed.
+      - question: |
+          Are there cases where socket-pair subscriptions might be more cost effective than core-pair subscriptions?
+        answer: |
+          Yes, when running OpenShift on bare-metal servers, if the compute pod density is high enough,
+          bare-metal socket-pair subscriptions could be more cost effective than core-pair subscriptions.
+document_outline: |
+  This guide from Red Hat outlines the subscription models for self-managed Red Hat OpenShift environments,
+  providing definitions for key terms like core-pair and bare metal socket-pair subscriptions, which are the
+  two primary types. It details the different Red Hat OpenShift editions available, such as Kubernetes Engine
+  and Container Platform, explaining what to count for subscriptions, with specific instructions for various
+  hardware configurations including bare metal and virtualized environments. The document also addresses special
+  use cases like disaster recovery and migrations, clarifies what does not require subscriptions, and offers a
+  step-by-step approach with examples to estimate the number of subscriptions needed based on application
+  instances and hardware resources.
+document:
+  repo: https://github.com/stefan-bergstein/etx-ubiquitous-tribble.git
+  commit: fb0eb5f90a54f4ab9ef92eb9eb67fe3b59594708
+  patterns:
+    - Self-managed-Red-Hat-OpenShift-subscription-guide.md
