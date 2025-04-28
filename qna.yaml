@@ -27,6 +27,149 @@ seed_examples:
         answer: |
           Yes, when running OpenShift on bare-metal servers, if the compute pod density is high enough,
           bare-metal socket-pair subscriptions could be more cost effective than core-pair subscriptions.
+
+  - context: |
+      Bare metal socket-pair subscriptions are only an option for OpenShift compute nodes deployed
+      to dedicated physical servers, either in your datacenter, in a hosted private cloud on a
+      supported bare-metal offering, or with a hyperscaler on a supported bare-metal offering.
+      Bare metal socket-pair subscriptions are the only option for OpenShift Virtualization Engine,
+      and are required for support of the OpenShift Virtualization feature in the other self-managed OpenShift editions.
+      Each bare metal socket-pair subscription entitles up to 128 physical cores across the socket-pair.
+      Bare-metal subscriptions are stackable both to cover socket-pairs with more than 128 cores total, and physical servers with more than 1 socket-pair.
+      To entitle a physical server, stack 1 or more subscriptions to cover either the total number of sockets or physical
+      cores in it (whichever is greater). For example, a server has 2 sockets with 48 cores in each CPU, totaling 96 cores.
+      One subscription is needed because the server has 1-2 sockets and less than 128 cores. A second server with 2 sockets and 192 total cores would need 2 subscriptions.
+      Two subscriptions are needed to cover 192 cores because a single subscription covers a maximum of 128 cores.
+      A single bare metal socket-pair subscription cannot be split across multiple physical hosts (to cover 2 servers with a single socket each,
+      or to cover cores on separate servers).
+      Each physical, bare-metal server using socket-based entitlements can only be used as a single OpenShift node due to
+      the inherent architecture of Kubernetes. Since each node in Kubernetes can only belong to a single cluster,
+      this means that all containers on a bare-metal server will be in the same cluster.
+    questions_and_answers:
+      - question: |
+          Can I use a bare metal socket-pair subscription for OpenShift nodes running on virtualized infrastructure?
+        answer: |
+          No, bare metal socket-pair subscriptions are only an option for OpenShift compute nodes deployed directly
+          on dedicated physical servers, either in your datacenter, a hosted private cloud on supported bare-metal offerings,
+          or with a hyperscaler’s supported bare-metal offering.
+      - question: |
+          How many cores does a single bare metal socket-pair subscription cover?
+        answer: |
+          A single bare metal socket-pair subscription covers up to 128 physical cores across the socket-pair.
+          If the socket-pair has more than 128 cores, you must stack additional subscriptions to cover the extra cores.
+      - question: |
+          What happens if my server has more than 2 sockets or more than 128 cores?
+        answer: |
+          You must stack multiple bare metal socket-pair subscriptions to cover either the number of sockets or
+          the number of physical cores — whichever is greater. For example, a server with 192 cores across 2 sockets
+          would need 2 subscriptions to cover all the cores.
+
+  - context: |
+      In recent years, specific hardware technologies have come onto the market that allow certain compute workloads
+      to perform with increased speed. These types of hardware devices are collectively referred to as accelerators or
+      AI accelerators in some Red Hat content. There are several types of hardware devices available for modern servers
+      that can be classified as accelerators, including but not limited to GPUs, TPUs, ASICs, NPUs, and FPGAs.
+      These accelerators are typically a card, board, or other physical device occupying a peripheral component interconnect
+      (PCI) slot in a server. This is almost always the unit quantity you have purchased from the accelerator vendor. For example,
+      in a server whose vendor says “it has 8 GPUs,” this almost always means 8 physical accelerator units.
+      Each AI accelerator subscription covers 1 physical accelerator device. For example, focusing just on the AI accelerator subscriptions:
+      A physical compute node with 4 physical GPU devices would require 4 x AI accelerator subscriptions in addition to
+      the CPU core-pair or socket-pair subscriptions covering the compute node.
+      A single virtual compute node with 1 physical GPU device presented to the VMs as multiple vGPUs would
+      require 1 AI Accelerator subscription, as counting is based on physical accelerators, not virtual accelerators.
+      Accelerators are only counted when they are used to execute a compute workload. A workload is considered a
+      compute workload when the primary purpose of the workload is not actively drawing pixels on a user’s screen in
+      near real-time or moving data across a network.
+
+    questions_and_answers:
+      - question: |
+          What types of hardware devices are considered accelerators in modern servers, and how are they typically installed?
+        answer: |
+          In modern servers, accelerators refer to hardware devices designed to speed up specific compute workloads.
+          Examples of these accelerators include GPUs, TPUs, ASICs, NPUs, and FPGAs. These devices are typically physical
+          components such as cards or boards that are installed into a server's peripheral component interconnect (PCI) slots.
+          Each device is counted as a separate physical unit when purchased and installed.
+      - question: |
+          If a physical compute node contains 4 GPUs, how many AI accelerator subscriptions are required according to Red Hat guidelines?
+        answer: |
+          According to Red Hat guidelines, a physical compute node with 4 physical GPU devices would require 4 AI accelerator subscriptions.
+          Each AI accelerator subscription covers one physical accelerator device, so the number of subscriptions must match the number of
+          physical accelerators present, in addition to any CPU core-pair or socket-pair subscriptions needed for the compute node itself.
+      - question: |
+          How is the subscription counting handled for virtual compute nodes that utilize physical accelerators, and does the number of vGPUs affect this count?
+        answer: |
+           For virtual compute nodes, subscription counting is based on the number of physical accelerators, not on the number of virtual
+           GPUs (vGPUs) presented to virtual machines. This means that even if a single physical GPU is divided and presented as multiple vGPUs across VMs,
+           only one AI Accelerator subscription is required. The critical factor is the number of physical devices, not the virtual instances derived from them.
+
+  - context: |
+      The classic OpenShift infrastructure requires a minimum of 3 control plane nodes for each OpenShift cluster.
+      An alternative is to use hosted control planes, where the control planes run on a central control plane cluster and provide the
+      logical control plane for OpenShift clusters. As always, control plane nodes and infrastructure nodes do not count for subscriptions,
+      but do need to be accounted for in the architecture
+      Hosted control planes may be run on any bare metal OpenShift cluster, however the compute nodes for those clusters
+      will need entitlements in line with the infrastructure they are running on. For example, virtual clusters hosted on OpenShift Virtualization Engine
+      will need core-pair subscriptions for the compute nodes, whereas a cluster whose control plane is hosted by an OpenShift Virtualization Engine
+      cluster and using bare-metal compute nodes would need bare metal socket-pair subscriptions.
+    questions_and_answers:
+      - question: |
+          What is the minimum number of control plane nodes required for a classic OpenShift cluster, and how does the hosted control
+          planes model differ in this aspect?
+        answer: |
+          In a classic OpenShift cluster, a minimum of three control plane nodes is required for each cluster. This is necessary to
+          maintain high availability and proper functioning of the cluster. In contrast, the hosted control planes model eliminates the
+          need for dedicated control plane nodes within each cluster. Instead, control planes are hosted on a central control plane cluster
+          and logically provide control services to multiple OpenShift clusters. This approach reduces the per-cluster infrastructure requirements
+          by centralizing control plane management.
+      - question: |
+          When using hosted control planes on an OpenShift Virtualization Engine, what types of subscriptions are needed for the compute nodes?
+        answer: |
+          When hosted control planes are deployed on an OpenShift Virtualization Engine, the compute nodes of the resulting clusters require
+          core-pair subscriptions. This is because the compute nodes are operating within a virtualized environment, and licensing aligns with
+          the core usage model typical for virtualized infrastructures. Therefore, core-pair subscriptions must be obtained to match the virtual
+          resources being consumed by these compute nodes.
+      - question: |
+          Do control plane nodes and infrastructure nodes count towards OpenShift subscription requirements, and how should
+          they be considered in architectural planning?
+        answer: |
+          Control plane nodes and infrastructure nodes do not count towards OpenShift subscription requirements, meaning that subscriptions are not needed for these nodes. However, despite not requiring subscriptions, they must still be considered during architectural planning. This is because they represent a necessary part of the overall cluster design and resource allocation, ensuring that the environment has sufficient capacity and proper structure to support operational needs.
+
+
+  - context: |
+     Entitlements for cores with hyperthreading. Making a determination about whether or not a particular OpenShift node uses 1 or
+     more physical cores is determined by whether or not that system has multiple threads per core enabled. Learn how to determine
+     whether a particular system supports hyperthreading. Virtualized OpenShift nodes using logical CPU threads, also known as
+     simultaneous multithreading (SMT) for AMD EPYC CPUs or hyperthreading with Intel CPUs, calculate their core utilization for
+     Red Hat OpenShift subscriptions based on the number of cores/CPUs assigned to the node, however each subscription covers
+     4 vCPUs/cores when logical CPU threads are used. Red Hat’s subscription management tools assume logical CPU threads are enabled by default on all systems.
+     Bare-metal subscriptions only count physical cores, logical CPU threads are not counted when calculating the number of subscriptions needed for bare metal.
+    questions_and_answers:
+      - question: |
+          How does the use of hyperthreading affect the calculation of core utilization for virtualized OpenShift nodes in relation to Red Hat subscriptions?
+        answer: |
+          For virtualized OpenShift nodes, the use of hyperthreading (also referred to as simultaneous multithreading or SMT for AMD EPYC CPUs)
+          impacts core utilization calculations by basing them on the number of cores or CPUs assigned to the node. When logical CPU threads are used,
+          Red Hat OpenShift subscriptions cover 4 virtual CPUs (vCPUs) or cores per subscription. Therefore, hyperthreading enables more efficient s
+          ubscription usage by counting logical threads rather than physical cores, as Red Hat’s subscription management tools assume logical CPU
+          threads are enabled by default on all systems.
+      - question: |
+           What is the difference between how physical cores and logical CPU threads are counted for Red Hat OpenShift subscriptions on
+           virtualized nodes versus bare-metal nodes?
+        answer: |
+          The difference lies in whether logical CPU threads are considered. For virtualized OpenShift nodes,
+          Red Hat counts the number of logical CPU threads (such as those enabled through hyperthreading or SMT)
+          and bases subscription requirements on cores/CPUs assigned, with each subscription covering 4 vCPUs/cores.
+          In contrast, for bare-metal OpenShift nodes, only physical cores are counted when calculating subscription needs,
+          and logical CPU threads are ignored. This ensures that virtualized environments can optimize resource usage,
+          while bare-metal environments rely solely on physical hardware metrics.
+      - question: |
+          How can you determine whether an OpenShift node is using multiple threads per core, and why is this important for subscription management?
+        answer: |
+          You can determine whether an OpenShift node is using multiple threads per core by checking if the system has hyperthreading (for Intel CPUs)
+          or simultaneous multithreading (SMT for AMD CPUs) enabled. This determination is important for subscription management because
+          the presence of multiple threads per core affects how Red Hat calculates core usage for OpenShift subscriptions. In virtualized environments,
+          logical CPU threads are counted, which impacts how many cores a subscription covers. Conversely, in bare-metal deployments,
+          only physical cores are relevant, making it crucial to understand the threading configuration of the node.
 document_outline: |
   This guide from Red Hat outlines the subscription models for self-managed Red Hat OpenShift environments,
   providing definitions for key terms like core-pair and bare metal socket-pair subscriptions, which are the
