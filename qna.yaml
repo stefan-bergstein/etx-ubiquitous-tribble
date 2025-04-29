@@ -27,7 +27,6 @@ seed_examples:
         answer: |
           Yes, when running OpenShift on bare-metal servers, if the compute pod density is high enough,
           bare-metal socket-pair subscriptions could be more cost effective than core-pair subscriptions.
-
   - context: |
       Bare metal socket-pair subscriptions are only an option for OpenShift compute nodes deployed
       to dedicated physical servers, either in your datacenter, in a hosted private cloud on a
@@ -80,7 +79,6 @@ seed_examples:
       Accelerators are only counted when they are used to execute a compute workload. A workload is considered a
       compute workload when the primary purpose of the workload is not actively drawing pixels on a user’s screen in
       near real-time or moving data across a network.
-
     questions_and_answers:
       - question: |
           What types of hardware devices are considered accelerators in modern servers, and how are they typically installed?
@@ -101,7 +99,6 @@ seed_examples:
            For virtual compute nodes, subscription counting is based on the number of physical accelerators, not on the number of virtual
            GPUs (vGPUs) presented to virtual machines. This means that even if a single physical GPU is divided and presented as multiple vGPUs across VMs,
            only one AI Accelerator subscription is required. The critical factor is the number of physical devices, not the virtual instances derived from them.
-
   - context: |
       The classic OpenShift infrastructure requires a minimum of 3 control plane nodes for each OpenShift cluster.
       An alternative is to use hosted control planes, where the control planes run on a central control plane cluster and provide the
@@ -132,9 +129,10 @@ seed_examples:
           Do control plane nodes and infrastructure nodes count towards OpenShift subscription requirements, and how should
           they be considered in architectural planning?
         answer: |
-          Control plane nodes and infrastructure nodes do not count towards OpenShift subscription requirements, meaning that subscriptions are not needed for these nodes. However, despite not requiring subscriptions, they must still be considered during architectural planning. This is because they represent a necessary part of the overall cluster design and resource allocation, ensuring that the environment has sufficient capacity and proper structure to support operational needs.
-
-
+          Control plane nodes and infrastructure nodes do not count towards OpenShift subscription requirements, meaning that
+          subscriptions are not needed for these nodes. However, despite not requiring subscriptions, they must still be considered
+          during architectural planning. This is because they represent a necessary part of the overall cluster design and resource allocation,
+          ensuring that the environment has sufficient capacity and proper structure to support operational needs.
   - context: |
      Entitlements for cores with hyperthreading. Making a determination about whether or not a particular OpenShift node uses 1 or
      more physical cores is determined by whether or not that system has multiple threads per core enabled. Learn how to determine
